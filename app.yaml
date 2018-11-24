@@ -1,0 +1,13 @@
+runtime: python37
+
+handlers:
+- url: /static
+  static_dir: static
+- url: /_ah/push-handlers/.*
+  script: auto
+  login: admin
+- url: /.*
+  script: auto
+
+includes:
+- secret.yaml

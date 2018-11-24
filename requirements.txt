@@ -1,0 +1,8 @@
+flask
+google
+google-api-core
+google-cloud-iot
+google-api-python-client
+google-cloud-datastore
+google-auth
+rauth
