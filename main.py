@@ -1,4 +1,5 @@
 import json
+import os
 
 from flask import Flask, request, make_response, jsonify, redirect
 
@@ -6,6 +7,7 @@ import line
 import pubsub
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SESSION_SECRET_KEY')
 
 
 @app.route('/v1/devices', methods=['PUT'])
@@ -17,9 +19,18 @@ def put_user():
     return response
 
 
+@app.route('/v1/devices/<device_key>/connections/line')
+def get_line_connection_state(device_key):
+    result = line.get_connection_state(request.headers['Authorization'], device_key)
+
+    response = make_response(jsonify(result))
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+
 @app.route('/oauth/line-notify/redirect', methods=['POST'])
 def auth_line_notify():
-    redirect_uri = line.redirect_auth(request.headers['Authorization'], request.form)
+    redirect_uri = line.redirect_auth(request.form)
     if redirect_uri is not None:
         return redirect(redirect_uri, code=302)
     else:
@@ -39,7 +50,7 @@ def auth_callback_line_notify():
 
 @app.route('/_ah/push-handlers/probe/events', methods=['POST'])
 def receive_events():
-    pubsub.receive_events(json.loads(device, request.data))
+    pubsub.receive_events(json.loads(request.data))
 
     response = make_response('', 204)
     response.mimetype = app.config['JSONIFY_MIMETYPE']

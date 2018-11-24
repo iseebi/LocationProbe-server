@@ -1,3 +1,6 @@
+pyjwt==1.6.4
+cryptography
+pycrypto
 flask
 google
 google-api-core

@@ -3,7 +3,8 @@ import json
 import random
 import string
 
-from google.auth import jwt
+import jwt
+from Crypto.PublicKey import RSA
 from google.cloud import datastore
 
 datastore_client = datastore.Client()
@@ -43,13 +44,17 @@ def generate_new_device_key():
 
 def device_by_jwt(jwt_string):
     tmp = jwt_string.split('.')
-    header = json.loads(base64.b64decode(tmp[0]).decode())
+    tmp_header = tmp[0] + '=' * (-len(tmp[0]) % 4)
+    header = json.loads(base64.b64decode(tmp_header).decode('utf-8'))
     device = get_device(header['kid'])
-    if device is None or header['alg'] != 'HS256':
+    if device is None or header['alg'] != 'RS256':
         return None
 
     try:
-        jwt.decode(jwt_string, certs=device['public_key'], verify=True)
+        rsa_key = RSA.importKey(device['public_key'])
+        jwt.decode(jwt_string, rsa_key.exportKey(), verify=True)
+    except jwt.exceptions.ExpiredSignatureError:
+        return None
     except ValueError:
         return None
 

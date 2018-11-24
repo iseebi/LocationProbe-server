@@ -45,7 +45,7 @@ def receive_states(payload):
     data = json.loads(base64.b64decode(payload['message']['data']))
     device = storage.get_device(device_key)
 
-    if data['state'] == 'connected':
+    if data['state'] == 'connect':
         line.notify_connected(device)
 
 
