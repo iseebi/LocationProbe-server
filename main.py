@@ -87,7 +87,6 @@ def auth_register_locapos():
         return response
 
 
-
 @app.route('/_ah/push-handlers/probe/events', methods=['POST'])
 def receive_events():
     pubsub.receive_events(json.loads(request.data))
