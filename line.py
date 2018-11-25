@@ -80,7 +80,8 @@ def redirect_callback(form):
     code = form['code']
     state = form['state']
     session_state = session.get('line_oauth_state')
-    device = storage.get_device(session.get('line_oauth_device_key'))
+    device_key = session.pop('line_oauth_device_key')
+    device = storage.get_device(device_key)
     redirect_uri = os.getenv('LINE_NOTIFY_REDIRECT_URI')
 
     if state == session_state and device is not None:
@@ -95,14 +96,12 @@ def redirect_callback(form):
     return session.get('line_oauth_callback_uri')
 
 
-def get_connection_state(authorization, device_key):
+def get_connection_state(authorization):
     auth_type, auth_info = authorization.split(None, 1)
     if auth_type.lower() != 'bearer':
         return {'authorized': False, 'connected': False}
     device = storage.device_by_jwt(auth_info)
     if device is None:
-        return {'authorized': False, 'connected': False}
-    if device['device_key'] != device_key:
         return {'authorized': False, 'connected': False}
 
     access_token = device['line_notify_access_token']
@@ -111,7 +110,7 @@ def get_connection_state(authorization, device_key):
         return {'authorized': True, 'connected': False}
 
     headers = {
-        'Authorization': 'Bearer {}'.format(device['line_notify_access_token']),
+        'Authorization': 'Bearer {}'.format(access_token),
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     req = urllib.request.Request('https://notify-api.line.me/api/status', headers=headers)

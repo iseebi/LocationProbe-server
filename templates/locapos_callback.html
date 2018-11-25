@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+    処理中です...
+    <form action="/oauth/locapos/register" method="post">
+        <input type="hidden" name="access_token" />
+        <input type="hidden" name="state" value="{{ state }}" />
+    </form>
+    <script>
+        let matches = location.hash.match(/access_token=([^&]*)/);
+        if (matches != null) {
+            access_token = matches[1];
+            document.forms[0].elements[0].value = access_token;
+            document.forms[0].submit();
+        }
+    </script>
+</body>
+</html>

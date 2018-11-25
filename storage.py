@@ -16,6 +16,8 @@ def random_str(n):
 
 
 def get_device(device_key):
+    if device_key is None:
+        return None
     key = datastore_client.key('Device', device_key)
     device = datastore_client.get(key=key)
     return device
@@ -29,6 +31,7 @@ def create_device(iot_device, name, device_key, public_key):
     device['iot_id'] = iot_device.num_id
     device['device_key'] = device_key
     device['line_notify_access_token'] = None
+    device['locapos_access_token'] = None
     datastore_client.put(device)
 
 
