@@ -1,11 +1,10 @@
 import json
 import os
 
-from flask import Flask, request, make_response, jsonify, redirect, render_template
-
 import line
 import locapos
 import pubsub
+from flask import Flask, request, make_response, jsonify, redirect, render_template
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SESSION_SECRET_KEY')

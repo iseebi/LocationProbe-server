@@ -40,33 +40,15 @@ def create_iot_device(new_device_key, public_key):
     }
 
 
+# noinspection PyUnusedLocal
 def receive_states(payload):
+    pass
+
+
+def receive_events(payload):
     device_key = payload['message']['attributes']['deviceId']
     data = json.loads(base64.b64decode(payload['message']['data']))
     device = storage.get_device(device_key)
 
-    if data['state'] == 'connect':
+    if data['event'] == 'connect':
         line.notify_connected(device)
-
-
-# noinspection PyUnusedLocal
-def receive_events(payload):
-    pass
-
-# {
-#     "message": {
-#         "attributes": {
-#             "deviceId": "iylkj6pulxluibo6bpehyvys2ogp5wpavyz703z0",
-#             "deviceNumId": "3325787078632318",
-#             "deviceRegistryId": "probes",
-#             "deviceRegistryLocation": "asia-east1",
-#             "projectId": "iseteki-carrouter"
-#         },
-#         "data": "eyJzdGF0ZSI6ImNvbm5lY3QifQ==",
-#         "messageId": "305314210854696",
-#         "message_id": "305314210854696",
-#         "publishTime": "2018-11-24T09:53:28.018Z",
-#         "publish_time": "2018-11-24T09:53:28.018Z"
-#     },
-#     "subscription": "projects/iseteki-carrouter/subscriptions/probe-states-gae"
-# }

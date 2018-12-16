@@ -1,0 +1,8 @@
+runtime: python37
+
+handlers:
+- url: /.*
+  script: auto
+
+includes:
+- ../secret.yaml

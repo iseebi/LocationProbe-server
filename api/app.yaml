@@ -1,3 +1,4 @@
+service: api
 runtime: python37
 
 handlers:
@@ -10,4 +11,4 @@ handlers:
   script: auto
 
 includes:
-- secret.yaml
+- ../secret.yaml
