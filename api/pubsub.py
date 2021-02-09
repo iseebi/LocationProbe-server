@@ -1,13 +1,14 @@
 import base64
 import json
+import os
 
 import line
 import storage
 from google.cloud import iot_v1
 
 iot_client = iot_v1.DeviceManagerClient()
-project_id = 'iseteki-carrouter'
-topic = 'projects/iseteki-carrouter/locations/asia-east1/registries/probes'
+project_id = os.getenv('PROJECT_ID')
+topic = os.getenv('IOT_TOPIC')
 
 
 def create_device(payload):

@@ -1,0 +1,6 @@
+dispatch:
+  - url: "api.locationprobe.iseteki.net/*"
+    service: api
+
+  - url: "locationprobe.iseteki.net/*"
+    service: default
